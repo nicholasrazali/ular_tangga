@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ular Tangga Truth Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ular Tangga: Truth Edition</h1>
+        <div id="turn-indicator">Giliran: <span id="currentPlayerName">Pemain 1</span></div>
+        
+        <div id="board"></div>
+
+        <div class="controls">
+            <button id="rollBtn">Lempar Dadu</button>
+            <div class="stats">
+                <p>Pemain 1 (Merah): <span id="p1-pos">1</span></p>
+                <p>Pemain 2 (Biru): <span id="p2-pos">1</span></p>
+            </div>
+            <p id="diceResult">Dadu: -</p>
+        </div>
+    </div>
+
+    <div id="truthModal" class="modal">
+        <div class="modal-content">
+            <h3>Tantangan Truth!</h3>
+            <p id="truthQuestion"></p>
+            <button onclick="closeModal()">Saya Sudah Jujur</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
