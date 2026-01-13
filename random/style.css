@@ -1,0 +1,31 @@
+body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
+.container { text-align: center; }
+#board { 
+    display: grid; 
+    grid-template-columns: repeat(10, 40px); 
+    grid-template-rows: repeat(10, 40px); 
+    gap: 2px; 
+    border: 5px solid #333; 
+    margin-bottom: 20px;
+}
+.cell { 
+    width: 40px; height: 40px; 
+    background: white; 
+    border: 1px solid #ddd; 
+    display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+}
+.player { background: red !important; border-radius: 50%; color: white; font-weight: bold; }
+.snake { background: #ffcccb; }
+.ladder { background: #ccffcc; }
+
+/* ... (Gaya sebelumnya tetap sama, tambahkan ini di bawahnya) ... */
+
+#turn-indicator { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; padding: 10px; background: #eee; border-radius: 8px; }
+
+.p1 { background: #ff4d4d !important; color: white; border-radius: 50%; border: 2px solid white; }
+.p2 { background: #4d79ff !important; color: white; border-radius: 50%; border: 2px solid white; }
+
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
+.modal-content { background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 80%; }
+.modal-content h3 { color: #e67e22; }
+#truthQuestion { font-style: italic; font-size: 1.1rem; margin: 20px 0; }
