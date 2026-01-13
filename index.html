@@ -3,31 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ular Tangga Truth Edition</title>
+    <title>LDR Edition: Ular Tangga Truth</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Ular Tangga: Truth Edition</h1>
-        <div id="turn-indicator">Giliran: <span id="currentPlayerName">Pemain 1</span></div>
-        
-        <div id="board"></div>
+    <div class="game-container">
+        <div class="header">
+            <h1>💞 LDR Snakes & Ladders</h1>
+            <div id="turn-info">Giliran: <span id="active-player-name">Pemain 1</span></div>
+        </div>
 
-        <div class="controls">
-            <button id="rollBtn">Lempar Dadu</button>
+        <div id="board-wrapper">
+            <div id="board"></div>
+        </div>
+
+        <div class="ui-panel">
             <div class="stats">
-                <p>Pemain 1 (Merah): <span id="p1-pos">1</span></p>
-                <p>Pemain 2 (Biru): <span id="p2-pos">1</span></p>
+                <div class="stat-box p1">P1: <span id="p1-pos">1</span></div>
+                <div class="stat-box p2">P2: <span id="p2-pos">1</span></div>
             </div>
-            <p id="diceResult">Dadu: -</p>
+            <div class="action-area">
+                <div id="dice-visual">?</div>
+                <button id="roll-btn">Kocok Dadu</button>
+            </div>
         </div>
     </div>
 
-    <div id="truthModal" class="modal">
+    <div id="truth-modal" class="modal">
         <div class="modal-content">
-            <h3>Tantangan Truth!</h3>
-            <p id="truthQuestion"></p>
-            <button onclick="closeModal()">Saya Sudah Jujur</button>
+            <div class="modal-header">💌 LDR TRUTH 💌</div>
+            <p id="question-text"></p>
+            <button onclick="closeModal()">Selesai Menjawab</button>
         </div>
     </div>
 

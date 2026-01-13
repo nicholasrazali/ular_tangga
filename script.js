@@ -1,95 +1,100 @@
 const board = document.getElementById('board');
-const rollBtn = document.getElementById('rollBtn');
-const truthModal = document.getElementById('truthModal');
-const truthQuestion = document.getElementById('truthQuestion');
+const diceDisplay = document.getElementById('dice-visual');
+const rollBtn = document.getElementById('roll-btn');
 
-let positions = [1, 1]; // [Pemain 1, Pemain 2]
-let currentPlayer = 0; // 0 untuk P1, 1 untuk P2
+let pos = [1, 1];
+let turn = 0; // 0 = P1, 1 = P2
 
-const snakesLadders = { 3: 22, 5: 8, 11: 26, 20: 29, 27: 1, 21: 9, 17: 4, 19: 7 };
+// Konfigurasi Ular & Tangga
+const mapping = {
+    3: 22, 5: 8, 11: 26, 20: 29, 36: 55, 50: 67, // Tangga
+    27: 1, 21: 9, 17: 4, 19: 7, 56: 35, 98: 78  // Ular
+};
 
-const truthList = [
-    "Apa ketakutan terbesarmu?",
-    "Siapa orang yang terakhir kamu kepoin di media sosial?",
-    "Apa kebohongan terakhir yang kamu ucapkan?",
-    "Pernahkah kamu pura-pura sakit untuk menghindari acara?",
-    "Apa hal paling memalukan yang pernah kamu lakukan?",
-    "Jika kamu bisa bertukar nasib dengan seseorang di ruangan ini, siapa itu?",
-    "Apa rahasia yang belum pernah kamu ceritakan ke orang tua?"
+// Pertanyaan Truth bertema LDR
+const ldrTruths = [
+    "Apa hal yang paling kamu kangenin saat kita nggak ketemu?",
+    "Pernah nggak kamu ngerasa insecure gara-gara jarak?",
+    "Apa lagu yang paling ngingetin kamu sama aku?",
+    "Kalau kita ketemu besok, hal pertama apa yang mau kamu lakuin?",
+    "Seberapa sering kamu ngecek chat dari aku tiap hari?",
+    "Apa hal paling berat menurutmu dalam hubungan LDR ini?",
+    "Pernah nggak kepikiran buat nyerah karena jarak?"
 ];
 
-function createBoard() {
-    board.innerHTML = '';
+// Buat Papan
+function initBoard() {
     for (let i = 100; i >= 1; i--) {
         const cell = document.createElement('div');
         cell.className = 'cell';
-        cell.id = `cell-${i}`;
+        cell.id = 'cell-' + i;
         cell.innerText = i;
+        if (mapping[i]) {
+            cell.classList.add(mapping[i] > i ? 'is-ladder' : 'is-snake');
+        }
         board.appendChild(cell);
     }
-    updateDisplay();
+    // Buat Bidak
+    const p1 = document.createElement('div'); p1.id = 't1'; p1.className = 'token token-p1';
+    const p2 = document.createElement('div'); p2.id = 't2'; p2.className = 'token token-p2';
+    board.appendChild(p1); board.appendChild(p2);
+    updateTokens();
 }
 
-function updateDisplay() {
-    document.querySelectorAll('.cell').forEach(c => {
-        c.classList.remove('p1', 'p2');
-        c.innerHTML = c.id.replace('cell-', ''); 
+function updateTokens() {
+    pos.forEach((p, i) => {
+        const target = document.getElementById('cell-' + p);
+        const token = document.getElementById('t' + (i + 1));
+        token.style.left = target.offsetLeft + (i * 10) + 'px';
+        token.style.top = target.offsetTop + (i * 10) + 'px';
+        document.getElementById(`p${i+1}-pos`).innerText = p;
     });
-
-    // Taruh Pemain 1
-    const cell1 = document.getElementById(`cell-${positions[0]}`);
-    cell1.classList.add('p1');
-    
-    // Taruh Pemain 2
-    const cell2 = document.getElementById(`cell-${positions[1]}`);
-    cell2.classList.add('p2');
-
-    document.getElementById('p1-pos').innerText = positions[0];
-    document.getElementById('p2-pos').innerText = positions[1];
-    document.getElementById('currentPlayerName').innerText = `Pemain ${currentPlayer + 1}`;
-    document.getElementById('currentPlayerName').style.color = currentPlayer === 0 ? 'red' : 'blue';
 }
 
-rollBtn.addEventListener('click', () => {
+rollBtn.onclick = () => {
+    rollBtn.disabled = true;
     const dice = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('diceResult').innerText = `Dadu: ${dice}`;
+    diceDisplay.innerText = dice;
 
-    let nextPos = positions[currentPlayer] + dice;
+    if (pos[turn] + dice <= 100) {
+        pos[turn] += dice;
+        updateTokens();
 
-    if (nextPos <= 100) {
         // Cek Ular/Tangga
-        if (snakesLadders[nextPos]) {
-            nextPos = snakesLadders[nextPos];
-        }
-        positions[currentPlayer] = nextPos;
-        updateDisplay();
-
-        // Munculkan Truth jika bukan di kotak 100
-        if (nextPos < 100) {
-            showTruth();
-        }
-    }
-
-    if (positions[currentPlayer] === 100) {
-        alert(`Selamat! Pemain ${currentPlayer + 1} Menang!`);
-        positions = [1, 1];
-        updateDisplay();
+        setTimeout(() => {
+            if (mapping[pos[turn]]) {
+                pos[turn] = mapping[pos[turn]];
+                updateTokens();
+            }
+            
+            if (pos[turn] === 100) {
+                alert("Pemain " + (turn + 1) + " Menang!");
+                location.reload();
+            } else {
+                showTruth();
+            }
+        }, 600);
     } else {
-        // Ganti giliran
-        currentPlayer = currentPlayer === 0 ? 1 : 0;
+        switchTurn();
     }
-});
+};
 
 function showTruth() {
-    const randomIdx = Math.floor(Math.random() * truthList.length);
-    truthQuestion.innerText = truthList[randomIdx];
-    truthModal.style.display = 'flex';
-    rollBtn.disabled = true; // Kunci tombol dadu sampai pertanyaan dijawab
+    const q = ldrTruths[Math.floor(Math.random() * ldrTruths.length)];
+    document.getElementById('question-text').innerText = q;
+    document.getElementById('truth-modal').style.display = 'flex';
 }
 
 function closeModal() {
-    truthModal.style.display = 'none';
+    document.getElementById('truth-modal').style.display = 'none';
+    switchTurn();
+}
+
+function switchTurn() {
+    turn = turn === 0 ? 1 : 0;
+    document.getElementById('active-player-name').innerText = "Pemain " + (turn + 1);
+    document.getElementById('active-player-name').style.color = turn === 0 ? '#ff4757' : '#2e86de';
     rollBtn.disabled = false;
 }
 
-createBoard();
+window.onload = initBoard;
